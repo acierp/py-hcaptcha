@@ -1,6 +1,10 @@
 # py-hcaptcha
 An unofficial wrapper for interacting with hCaptcha challenges.
 
+* Not an automatic solver (yet).
+* Device must be running Windows with Google Chrome installed.
+* Some parts of the code need to be changed frequently and therefore may be written in a sloppy way.
+
 # Install
 ```bash
 pip install git+https://github.com/h0nde/py-hcaptcha
