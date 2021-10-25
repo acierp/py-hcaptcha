@@ -1,6 +1,11 @@
 # py-hcaptcha
 An unofficial wrapper for interacting with hCaptcha challenges.
 
+# Install
+```bash
+pip install git+https://github.com/h0nde/py-hcaptcha
+```
+
 # Usage
 ```python
 import hcaptcha
