@@ -1,2 +1,29 @@
 # py-hcaptcha
- 
+An unofficial wrapper for interacting with hCaptcha challenges.
+
+# Usage
+```python
+import hcaptcha
+
+ch = hcaptcha.Challenge(
+    site_key="f5561ba9-8f1e-40ca-9b5b-a0b3f719ef34",
+    site_url="https://discord.com/",
+    #http_proxy="127.0.0.1:8888",
+    #ssl_context=__import__("ssl")._create_unverified_context(),
+    timeout=5
+)
+
+print(ch.question["en"])
+
+for tile in ch:
+    image = tile.get_image(raw=False)
+    image.show()
+    if input("answer (y/n): ").lower() == "y":
+        ch.answer(tile)
+
+try:
+    token = ch.submit()
+    print(token)
+except hcaptcha.ChallengeError as err:
+    print(err)
+```
