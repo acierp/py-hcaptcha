@@ -154,7 +154,7 @@ class ChromeAgent(Agent):
 
         headers["Host"] = p_url.hostname
         headers["Connection"] = "keep-alive"
-        headers["sec-ch-ua"] = f'"Chromium";v="{self.chrome_version}", "Google Chrome";v="{self.chrome_version}", ";Not A Brand";v="99"'
+        headers["sec-ch-ua"] = f'"Chromium";v="{self.chrome_version.split(".", 1)[0]}", "Google Chrome";v="{self.chrome_version.split(".", 1)[0]}", ";Not A Brand";v="99"'
         headers["sec-ch-ua-mobile"] = "?0"
         headers["User-Agent"] = self.user_agent
         headers["sec-ch-ua-platform"] = '"Windows"'
