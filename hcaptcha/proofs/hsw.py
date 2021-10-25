@@ -58,10 +58,11 @@ if is_main_process():
         "http://localhost:9932/"])
 
 sio = socketio.Client()
-sio.connect("http://localhost:9932")
 lock = multiprocessing.Lock()
 event = multiprocessing.Event()
 proof = None
+
+sio.connect("http://localhost:9932")
 
 @sio.on("response")
 def on_response(token):
