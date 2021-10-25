@@ -1,12 +1,19 @@
 from .base import Agent
 from typing import Literal
 from urllib.parse import urlsplit, urlencode
+from http.client import HTTPSConnection
 import random
 import time
 import json
 
+def latest_chrome_agent():
+    conn = HTTPSConnection("jnrbsn.github.io", 443)
+    conn.request("GET", "/user-agents/user-agents.json")
+    data = json.loads(conn.getresponse().read())
+    return data[0]
+
 class ChromeAgent(Agent):
-    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"
+    user_agent = latest_chrome_agent()
     header_order = {
         "host": 0,
         "connection": 1,
@@ -147,7 +154,7 @@ class ChromeAgent(Agent):
 
         headers["Host"] = p_url.hostname
         headers["Connection"] = "keep-alive"
-        headers["sec-ch-ua"] = '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"'
+        headers["sec-ch-ua"] = f'"Chromium";v="{self.chrome_version}", "Google Chrome";v="{self.chrome_version}", ";Not A Brand";v="99"'
         headers["sec-ch-ua-mobile"] = "?0"
         headers["User-Agent"] = self.user_agent
         headers["sec-ch-ua-platform"] = '"Windows"'

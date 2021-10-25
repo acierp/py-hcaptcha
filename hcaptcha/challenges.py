@@ -1,25 +1,18 @@
-from .agents import Agent
+from .constants import *
+from .agents import Agent, random_agent
 from .models import Tile
 from .structures import EventRecorder
 from .proofs import get_proof
 from .curves import gen_mouse_move
 from .utils import parse_proxy_string, random_widget_id, latest_version_id
 from .exceptions import *
-from typing import List
+from typing import Iterator, List
 from random import randint
 from urllib.parse import urlsplit
 from http.client import HTTPSConnection
 import json
 import ssl
 import zlib
-
-FRAME_SIZE = (400, 600)
-TILES_PER_PAGE = 9
-TILES_PER_ROW = 3
-TILE_IMAGE_SIZE = (123, 123)
-TILE_IMAGE_START_POS = (11, 130)
-TILE_IMAGE_PADDING = (5, 6)
-VERIFY_BTN_POS = (314, 559)
 
 class Challenge:
     _version_id = latest_version_id()
@@ -36,11 +29,13 @@ class Challenge:
         self,
         site_key: str,
         site_url: str,
-        agent: Agent,
+        agent: Agent = None,
         http_proxy: str = None,
         timeout: float = 5,
         ssl_context: ssl.SSLContext = _default_ssl_context
     ):
+        agent = agent or random_agent()
+
         self._site_key = site_key
         self._site_url = site_url
         self._site_hostname = urlsplit(site_url).hostname
@@ -66,18 +61,19 @@ class Challenge:
         self._get_captcha()
         self._frame.set_data("dct", self._frame._manifest["st"])
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Tile]:
         if not self.tiles: return
         yield from self.tiles
 
-    def close(self):
+    def close(self) -> None:
         for conn in self._conn_map.values():
             conn.close()
 
-    def answer(self, tile):
+    def answer(self, tile: Tile) -> None:
+        assert isinstance(tile, Tile), "Not a tile object."
         self._answers.append(tile)
     
-    def submit(self):
+    def submit(self) -> str:
         if self.token: return self.token
     
         self._simulate_solve()
